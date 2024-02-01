@@ -1,4 +1,4 @@
-#!/usr/bin/env -S python3 -m bpython -i
+# !/usr/bin/env -S python3 -m bpython -i
 
 from pyrenode3.wrappers import Analyzer, Emulation, Monitor
 

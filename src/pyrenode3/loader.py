@@ -52,14 +52,14 @@ class RenodeLoader(metaclass=MetaSingleton):
         """Load Renode from Arch package."""
         path = pathlib.Path(path)
         temp = tempfile.TemporaryDirectory()
-        # with tarfile.open(path, "r") as f:
-        #     f.extractall(temp.name)
+        with tarfile.open(path, "r") as f:
+            f.extractall(temp.name)
 
-        # renode_dir = pathlib.Path(temp.name) / "opt/renode"
-        renode_dir = pathlib.Path(renode_dir_path)
+        renode_dir = pathlib.Path(temp.name) / "opt/renode"
+        # renode_dir = pathlib.Path(renode_dir_path)
 
         loader = cls()
-        loader.__setup(renode_dir, renode_dir, temp=temp)
+        loader.__setup(renode_dir / "bin", renode_dir, temp=temp)
 
         return loader
 
