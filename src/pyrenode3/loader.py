@@ -94,7 +94,8 @@ class RenodeLoader(metaclass=MetaSingleton):
             raise InitializationError(msg)
 
         self.__bin_dir = pathlib.Path(bin_dir).absolute()
-        self.__renode_dir = pathlib.Path(renode_dir).absolute()
+        # self.__renode_dir = pathlib.Path(renode_dir).absolute()
+        self.__renode_dir = pathlib.Path("/home/asmita/fuzzing_bare-metal/SEFF_project_dirs/SEFF-project/renode").absolute()
         self.__extra = kwargs
 
         self.__load_asm()
