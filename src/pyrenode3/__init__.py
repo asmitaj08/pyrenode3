@@ -6,10 +6,10 @@ import sys
 from pyrenode3.loader import RenodeLoader
 
 if "PYRENODE_SKIP_LOAD" not in os.environ:
-    if (pkg := os.environ.get("PYRENODE_ARCH_PKG")) is not None:
-        RenodeLoader.from_arch(pkg)
+    # if (pkg := os.environ.get("PYRENODE_ARCH_PKG")) is not None:
+    #     RenodeLoader.from_arch(pkg)
 
-    elif (pkg := os.environ.get("PYRENODE_BUILD_DIR")) is not None:
+    if (pkg := os.environ.get("PYRENODE_BUILD_DIR")) is not None:
         RenodeLoader.from_mono_build(pkg)
 
     if not RenodeLoader().is_initialized:
