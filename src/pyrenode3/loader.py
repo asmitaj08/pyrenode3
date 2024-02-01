@@ -94,10 +94,11 @@ class RenodeLoader(metaclass=MetaSingleton):
         if self.__initialized:
             msg = "RenodeLoader is already initialized"
             raise InitializationError(msg)
-
-        self.__bin_dir = pathlib.Path(renode_dir_path).absolute()
+        
+        print(f"**** Bin dir : {bin_dir} \n *** renode_dir : {renode_dir}")
+        self.__bin_dir = pathlib.Path(bin_dir).absolute()
         # self.__renode_dir = pathlib.Path(renode_dir).absolute()
-        self.__renode_dir = pathlib.Path(renode_dir_path).absolute()
+        self.__renode_dir = pathlib.Path(renode_dir).absolute()
         self.__extra = kwargs
 
         self.__load_asm()
