@@ -1,6 +1,7 @@
 from Antmicro.Renode import Core
 from Antmicro.Renode.Core.Extensions import FileLoaderExtensions
 from Antmicro.Renode.PlatformDescription.UserInterface import PlatformDescriptionMachineExtensions
+from Antmicro.Renode.Peripherals.CPU import TranslationCPUHooksExtensions
 
 from pyrenode3 import wrappers
 from pyrenode3.rpath import RPath
@@ -54,3 +55,8 @@ class Machine(Wrapper):
             load point
         """
         FileLoaderExtensions.LoadBinary(self.sysbus.internal, RPath(location).read_file_path, load_point)
+    
+    # def set_block_hook(self, hook_fn) -> None:
+    #     "Set block device hook function."
+    #     TranslationCPUHooksExtensions.SetHookAtBlockBegin(self.sysbus.cpu)
+

@@ -10,6 +10,7 @@ import clr
 
 from pyrenode3.singleton import MetaSingleton
 
+# renode_dir_path = "/home/asmita/fuzzing_bare-metal/SEFF_project_dirs/renode_orig"
 renode_dir_path = "/home/asmita/fuzzing_bare-metal/SEFF_project_dirs/SEFF-project/renode"
 
 class InitializationError(Exception):
