@@ -1,7 +1,7 @@
 # !/usr/bin/env -S python3 -m bpython -i
 # from os import system
 from pyrenode3 import RPath
-import System# import sys
+import System # import sys
 from pyrenode3.wrappers import Analyzer, Emulation, Monitor
 from Antmicro.Renode.Peripherals.CPU import TranslationCPUHooksExtensions
 from Antmicro.Renode.Peripherals.CPU import TranslationCPU # src/Infrastructure/src/Emulator/Peripherals/Peripherals/CPU/TranslationCPU.cs
