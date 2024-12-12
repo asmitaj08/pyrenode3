@@ -1,13 +1,108 @@
-build:
-  image: "d2s://external/docker/debian:bookworm"
+image: "d2s://external/docker/debian:bookworm"
+
+variables:
+  COMMON_DEPS: git autoconf automake coreutils g++ gcc libgtk2.0-0 libtool policykit-1 python3 python3 python3-pip python3-venv screen uml-utilities wget
+
+.install-dependencies: &install_dependencies |-
+    apt-get -qqy update &> /dev/null
+    apt-get -qqy install ${COMMON_DEPS} ${JOB_DEPS}
+
+.install-dotnet: &install_dotnet |-
+    wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
+    dpkg -i packages-microsoft-prod.deb
+    rm packages-microsoft-prod.deb
+    apt-get -qqy update &> /dev/null
+    apt-get -qqy install -y dotnet-sdk-8.0 dotnet-runtime-6.0 &> /dev/null
+    dotnet --list-sdks && dotnet --list-runtimes
+
+.init-python: &init_python |-
+    python3 -m venv .venv && source .venv/bin/activate
+    pip install .
+    pip install -r examples/requirements.txt
+
+.run-tests: &run_tests |
+  for i in examples/*.py; do echo "Running test $i..."; timeout 240 python3 $i; done
+
+test-mono-pkg:
   stage: build
   tags: ['ace-x86_64']
-  before_script:
-    - apt -qqy update 2> /dev/null > /dev/null
-    - apt -qqy install git automake autoconf libtool g++ coreutils policykit-1 uml-utilities python3 mono-complete python3 python3-pip wget
+  variables:
+    JOB_DEPS: gtk-sharp2 mono-complete
   script:
+    - *install_dependencies
+    - *init_python
+    # Download Renode pkg
     - wget --progress=dot:giga https://builds.renode.io/renode-latest.pkg.tar.xz
-    - export PYRENODE_ARCH_PKG=`pwd`/renode-latest.pkg.tar.xz
-    - python3 -m pip install --break-system-packages .
-    - for i in examples/*; do echo "Running test $i..."; python3 $i; done
+    - export PYRENODE_RUNTIME=mono
+    - export PYRENODE_PKG=$PWD/renode-latest.pkg.tar.xz
+    - *run_tests
 
+test-installed-pkg:
+  stage: build
+  tags: ['ace-x86_64']
+  variables:
+    JOB_DEPS: gtk-sharp2 mono-complete
+  script:
+    - *install_dependencies
+    - *init_python
+    # Download and install Renode
+    - wget --progress=dot:giga https://builds.renode.io/renode-latest.deb
+    - apt-get install ./renode-latest.deb
+    - *run_tests
+
+test-dotnet-build:
+  stage: build
+  tags: ['ace-x86_64']
+  variables:
+    JOB_DEPS: cmake
+  script:
+    - *install_dependencies
+    - *install_dotnet
+    - *init_python
+    # Build Renode
+    - git clone https://github.com/antmicro/renode.git
+    - pushd renode && ./build.sh --net && popd
+    - export PYRENODE_RUNTIME=coreclr
+    - export PYRENODE_BUILD_DIR=$PWD/renode
+    - *run_tests
+
+test-dotnet-portable:
+  stage: build
+  tags: ['ace-x86_64']
+  script:
+    - *install_dependencies
+    - *init_python
+    # Download Renode pkg
+    - wget --progress=dot:giga https://builds.renode.io/renode-latest.linux-portable-dotnet.tar.gz
+    - tar xvf renode-latest.linux-portable-dotnet.tar.gz
+    - export PYRENODE_RUNTIME=coreclr
+    - export PYRENODE_BIN=$(realpath $PWD/renode_*-dotnet_portable/renode)
+
+test-dotnet-pkg:
+  stage: build
+  tags: ['ace-x86_64']
+  variables:
+    JOB_DEPS: curl jq zip
+  script:
+    - *install_dependencies
+    - *install_dotnet
+    - *init_python
+    - curl -s https://builds.renode.io/renode-latest.linux-dotnet.tar.gz -o renode-dotnet.tar.gz
+    - export PYRENODE_RUNTIME=coreclr
+    - export PYRENODE_PKG=$PWD/renode-dotnet.tar.gz
+    - *run_tests
+
+test-mono-build:
+  stage: build
+  tags: ['ace-x86_64']
+  variables:
+    JOB_DEPS: cmake gtk-sharp2 mono-complete
+  script:
+    - *install_dependencies
+    - *init_python
+    # Build Renode
+    - git clone https://github.com/antmicro/renode.git
+    - pushd renode && ./build.sh && popd
+    - export PYRENODE_RUNTIME=mono
+    - export PYRENODE_BUILD_DIR=$(pwd)/renode
+    - *run_tests

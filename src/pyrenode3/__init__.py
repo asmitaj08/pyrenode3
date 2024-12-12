@@ -1,7 +1,5 @@
 import importlib
 import logging
-import os
-import sys
 
 from pyrenode3.loader import RenodeLoader
 
@@ -14,8 +12,14 @@ if "PYRENODE_SKIP_LOAD" not in os.environ:
     RenodeLoader.from_mono_build(renode_path)
 
     if not RenodeLoader().is_initialized:
-        logging.critical("Set PYRENODE_ARCH_PKG to the location of renode arch package.")
-        sys.exit(1)
+        msg = (
+            f"Renode not found. Please do one of following actions:\n"
+            f"   - install Renode from a package\n"
+            f"   - set {env.PYRENODE_PKG} to the location of the Renode package\n"
+            f"   - set {env.PYRENODE_BUILD_DIR} to the location of the Renode build directory\n"
+            f"   - set {env.PYRENODE_BIN} to the location of the Renode portable binary\n"
+        )
+        raise ImportError(msg)
 
     # this prevents circular imports
     importlib.import_module("pyrenode3.wrappers")
