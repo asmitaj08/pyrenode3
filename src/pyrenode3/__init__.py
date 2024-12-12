@@ -1,6 +1,6 @@
 import importlib
 import logging
-
+import os
 from pyrenode3.loader import RenodeLoader
 
 renode_path = "/home/asmita/fuzzing_bare-metal/SEFF_project_dirs/SEFF-project/renode"
