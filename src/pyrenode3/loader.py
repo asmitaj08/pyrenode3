@@ -140,7 +140,7 @@ class RenodeLoader(metaclass=MetaSingleton):
     def from_mono_build(cls, path: "Union[str, pathlib.Path]"):
         """Load Renode from Mono build."""
         renode_dir = pathlib.Path(path)
-
+        
         pythonnet_load("mono")
 
         loader = cls()
