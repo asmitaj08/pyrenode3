@@ -391,7 +391,7 @@ class RenodeLoader(metaclass=MetaSingleton):
             msg = "RenodeLoader is already initialized"
             raise InitializationError(msg)
         
-        print(f"**** Bin dir : {bin_dir} \n *** renode_dir : {renode_dir}")
+        print(f"**** Bin dir here: {bin_dir} \n *** renode_dir here : {renode_dir}")
         self.__bin_dir = pathlib.Path(bin_dir).absolute()
         # self.__renode_dir = pathlib.Path(renode_dir).absolute()
         self.__renode_dir = pathlib.Path(renode_dir).absolute()
