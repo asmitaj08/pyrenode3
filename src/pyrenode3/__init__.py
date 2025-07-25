@@ -6,14 +6,14 @@ import os
 from pyrenode3.loader import RenodeLoader
 from pyrenode3 import env
 
-renode_path = "/home/asmita/fuzzing_bare-metal/SEFF_project_dirs/SEFF-project/renode"
+# renode_path = "/home/asmita/fuzzing_bare-metal/SEFF_project_dirs/SEFF-project/renode"
 
-if "PYRENODE_SKIP_LOAD" not in os.environ: #orig
-    # if (pkg := os.environ.get("PYRENODE_ARCH_PKG")) is not None:
-    #     RenodeLoader.from_arch(pkg)
+# if "PYRENODE_SKIP_LOAD" not in os.environ: #orig
+#     # if (pkg := os.environ.get("PYRENODE_ARCH_PKG")) is not None:
+#     #     RenodeLoader.from_arch(pkg)
 
-    # if (pkg := os.environ.get("PYRENODE_BUILD_DIR")) is not None:
-    RenodeLoader.from_mono_build(renode_path) #orig
+#     # if (pkg := os.environ.get("PYRENODE_BUILD_DIR")) is not None:
+#     RenodeLoader.from_mono_build(renode_path) #orig
 
 if not env.pyrenode_skip_load:
     runtime = env.pyrenode_runtime
